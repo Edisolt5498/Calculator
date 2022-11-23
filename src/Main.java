@@ -35,29 +35,34 @@ public class Main {
 
     public static String calc(String InputUser) {
 
+        String num1 = "0";
+        String num2 = "0";
+        char operator = '0';
+
         for (int i = 0; i < InputUser.length(); i++) {
 
             if ((InputUser.charAt(i)) == '+' || (InputUser.charAt(i)) == '-' || (InputUser.charAt(i)) == '*' || (InputUser.charAt(i)) == '/') {
 
-                char operator = InputUser.charAt(i); // проверка на наличие знака и сохранение знака и потенциальных чисел
-                String num1 = InputUser.substring(0, i);
-                String num2 = InputUser.substring(i + 1, InputUser.length());
-
-                if ((checker(new String[]{num1, num2}, BookRoman)) == 1) { // проверка на арабские и на ошибки (return = 1 - араб. числа; 2 - рим. числа;
-                    return ArabCalc(new String[]{num1, num2}, operator); // калькулятор для арабских чисел               3 - разные; 4 - ни то ни другое)
-                } else if ((checker(new String[]{num1, num2}, BookRoman)) == 2) {
-                    return RomanCalc(new String[]{num1, num2}, BookRoman, operator); // калькулятор для римских чисел
-                } else if ((checker(new String[]{num1, num2}, BookRoman)) == 3) {
-                    throw new InputMismatchException("Тут слишком разное, давай как я просил...Неправильный ввод..."); // ловим 3 и 4 ошибки
-                } else {
-                    throw new InputMismatchException ("Мне кажется, или тут нет никаких чисел...или я не знаю...Неправильный ввод...");
-                }
+                operator = InputUser.charAt(i); // проверка на наличие знака и сохранение знака и потенциальных чисел
+                num1 = InputUser.substring(0, i);
+                num2 = InputUser.substring(i + 1, InputUser.length());
+                break;
 
             }
-
+            else if (i == InputUser.length()-1){
+                throw new InputMismatchException("Где знак?...Неправильный ввод..."); //ГДЕ ОН?. ловим отсутствие знака
+            }
         }
 
-        throw new InputMismatchException("Где знак?...Неправильный ввод..."); //ГДЕ ОН?. ловим отсутствие знака
+        if ((checker(new String[]{num1, num2}, BookRoman)) == 1) { // проверка на арабские и на ошибки (return = 1 - араб. числа; 2 - рим. числа;
+            return ArabCalc(new String[]{num1, num2}, operator); // калькулятор для арабских чисел               3 - разные; 4 - ни то ни другое)
+        } else if ((checker(new String[]{num1, num2}, BookRoman)) == 2) {
+            return RomanCalc(new String[]{num1, num2}, BookRoman, operator); // калькулятор для римских чисел
+        } else if ((checker(new String[]{num1, num2}, BookRoman)) == 3) {
+            throw new InputMismatchException("Тут слишком разное, давай как я просил...Неправильный ввод..."); // ловим 3 и 4 ошибки
+        } else {
+            throw new InputMismatchException ("Мне кажется, или тут нет никаких чисел...или я не знаю...Неправильный ввод...");
+        }
 
     }
 
@@ -68,14 +73,14 @@ public class Main {
 
         for (int i = 0; i < 2; i++) { // недопустить разные системы счета
 
-            if        ((int)(numbs[i].charAt(0)) >= 48 && (int)(numbs[i].charAt(0)) <= 57 && numbs[i].length() == 1 || numbs[i].contentEquals("10"))  {
+            if       (isThereArab(numbs[i], 10))  {
                 if (check == 2) {
                     check = 3;
                 } else {
                     check = 1;
                 }
             }
-            else if (isThereRoman(numbs[i], Book)) {
+            else if (isThereRoman(numbs[i], Book, 10)) {
                 if (check == 1) {
                     check = 3;
                 } else {
@@ -142,14 +147,41 @@ public class Main {
 
     }
 
-    public static boolean isThereRoman(String Input, String[] Book){
-        for (int i = 0; i <= 10; i++) {
+    public static boolean isThereRoman(String Input, String[] Book, int limit){
+
+        for (int i = 0; i <= limit; i++) {
+
             if (Input.contains(Book[i])) {
                 return true;
             }
+
         }
+
         return false;
+
     }
+
+    public static boolean isThereArab(String Input, int limit){
+
+        if (limit >= 10){
+            for (int i = 0; i < Input.length(); i++) {
+                if (!((int) (Input.charAt(i)) >= 48 && (int) (Input.charAt(i)) <= 57 && Input.length() <= Integer.toString(limit).length() - 1 || Input.contentEquals(Integer.toString(limit))) )
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        else if (limit > 0) {
+            if ((int) (Input.charAt(0)) >= 48) if ((int) (Input.charAt(0)) <= 57) if (Input.length() == 1) return true;
+            return false;
+        }
+
+        return false;
+
+    }
+
+
 
 }
 

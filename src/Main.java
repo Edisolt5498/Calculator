@@ -68,27 +68,22 @@ public class Main {
 
         for (int i = 0; i < 2; i++) { // недопустить разные системы счета
 
-            if (numbs[i].contentEquals("0") || numbs[i].contentEquals("1") || numbs[i].contentEquals("2")
-                    || numbs[i].contentEquals("3") || numbs[i].contentEquals("4") || numbs[i].contentEquals("5")
-                    || numbs[i].contentEquals("6") || numbs[i].contentEquals("7") || numbs[i].contentEquals("8")
-                    || numbs[i].contentEquals("9") || numbs[i].contentEquals("10")) {
+            if        ((int)(numbs[i].charAt(0)) >= 48 && (int)(numbs[i].charAt(0)) <= 57 && numbs[i].length() == 1 || numbs[i].contentEquals("10"))  {
                 if (check == 2) {
                     check = 3;
                 } else {
                     check = 1;
                 }
-            } else if (numbs[i].contentEquals(Book[0]) || numbs[i].contentEquals(Book[1]) || numbs[i].contentEquals(Book[2])
-                    || numbs[i].contentEquals(Book[3]) || numbs[i].contentEquals(Book[4]) || numbs[i].contentEquals(Book[5])
-                    || numbs[i].contentEquals(Book[6]) || numbs[i].contentEquals(Book[7]) || numbs[i].contentEquals(Book[8])
-                    || numbs[i].contentEquals(Book[9]) || numbs[i].contentEquals(Book[10])) {
+            }
+            else if (isThereRoman(numbs[i], Book)) {
                 if (check == 1) {
                     check = 3;
                 } else {
                     check = 2;
                 }
-            } else {
-                check = 4;
-                break;
+            }
+            else {
+                return 4; //check = 4 значит ошибку в вводе
             }
 
         }
@@ -146,5 +141,15 @@ public class Main {
         return Integer.toString(sum);
 
     }
+
+    public static boolean isThereRoman(String Input, String[] Book){
+        for (int i = 0; i <= 10; i++) {
+            if (Input.contains(Book[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
 
